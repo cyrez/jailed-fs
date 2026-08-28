@@ -71,9 +71,10 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
     $app = $this->getApplication();
     // Bail out early
     if (!$app || $app->input->get('option') !== 'com_media') return;
-    $PluginUserGroups = (array) $this->params->get('jail_usergroups', []);
-    $userGroups       = $app->getIdentity()->groups;
-    if (count(array_intersect($userGroups, $PluginUserGroups)) === 0) return;
+    $PluginUserGroups  = (array) $this->params->get('jail_usergroups', []);
+    $AllowedUserGroups = (array) $this->params->get('allowed_usergroups', []);
+    $userGroups        = $app->getIdentity()->groups;
+    if (\count(array_intersect($userGroups, $PluginUserGroups)) === 0 || \count(array_intersect($userGroups, $AllowedUserGroups)) > 0) return;
 
     // Remove local filesystem from PluginHelper's loaded plugins
     try {
@@ -145,7 +146,7 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
    */
   public function getID(): string
   {
-    return 'restrictedfs';
+    return $this->params->get('storage_name', 'restrictedfs');
   }
 
   /**
@@ -167,12 +168,13 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
     if (!$app) return [];
 
     $user = $app->getIdentity();
-    $storagePath = $this->params->get('storage_path', 'images');
+    $storagePath   = $this->params->get('storage_path', 'images');
+    $storageFolder = $this->params->get('storage_folder', 'users');
     $userName = $this->masked
       ? md5($user->username)
       : urlencode(str_replace(['@', '.', '\\', '/', '*', '?', '<', '>'], ['_', '-', '_', '_', '_', '_', '_', '_'], $user->username));
 
-    $directoryPath = JPATH_ROOT . '/' . $storagePath . '/users/' . $userName;
+    $directoryPath = JPATH_ROOT . '/' . $storagePath . '/' . $storageFolder . '/'. $userName;
     if (!is_dir($directoryPath)) mkdir($directoryPath, 0755, true);
 
     $adapter = new \Dgrammatiko\Plugin\System\RestrictedFS\Adapter\RestrictedFSAdapter(
