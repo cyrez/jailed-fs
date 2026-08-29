@@ -13,9 +13,9 @@
     "lint-js": "npx eslint .",
     "lint": "npm run lint-css && npm run lint-js",
     "update:browserlist": "npx browserslist@latest --update-db",
-    "test": "eleventy",
-    "build:site": "eleventy",
-    "serve": "eleventy --serve"
+    "test": "npx eleventy",
+    "build:site": "npx eleventy",
+    "serve": "npx eleventy --serve"
   },
   "repository": {
     "type": "git",
