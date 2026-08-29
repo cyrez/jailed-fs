@@ -1,10 +1,12 @@
-const pluginSyntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
-const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
+import markdownIt from "markdown-it";
+import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
+import eleventyNavigationPlugin from "@11ty/eleventy-navigation";
 // let Nunjucks = require('nunjucks');
-const anchor = require("markdown-it-anchor");
+import anchor from "markdown-it-anchor";
 // const htmlmin = require("html-minifier");
 // const codepenIt = require("11ty-to-codepen");
-const Image = require("@11ty/eleventy-img");
+import { Image } from "@11ty/eleventy-img";
+import { Liquid } from "liquidjs";
 
 async function imageShortcode(src, alt, sizes) {
   let metadata = await Image(src, {
@@ -29,8 +31,7 @@ async function imageShortcode(src, alt, sizes) {
 //   new Nunjucks.FileSystemLoader('./site/_includes')
 // );
 
-module.exports = function (eleventyConfig) {
-  let { Liquid } = require('liquidjs');
+export default function (eleventyConfig) {
   let options = {
     extname: ".liquid",
     dynamicPartials: true,
@@ -74,7 +75,7 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.setLibrary(
     "md",
-    require("markdown-it")({
+    markdownIt({
       html: true,
       breaks: true,
       linkify: true,
