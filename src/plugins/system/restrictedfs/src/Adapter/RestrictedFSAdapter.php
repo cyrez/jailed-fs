@@ -59,6 +59,6 @@ class RestrictedFSAdapter extends LocalAdapter
    */
   public function getUrl(string $path): string
   {
-    return Uri::root() . str_replace(" ", "%20", $this->adapterName . '/users/' . $this->filePath . $path);
+    return Uri::root() . str_replace(" ", "%20", $this->adapterName . '/' . $this->filePath . $path);
   }
 }

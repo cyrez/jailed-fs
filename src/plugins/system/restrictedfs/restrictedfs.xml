@@ -28,6 +28,15 @@
           multiple="true"
           layout="joomla.form.field.list-fancy-select"
         />
+        <field
+          name="allowed_usergroups"
+          type="usergrouplist"
+          default="8"
+          label="Allowed User Groups"
+          description="Select the user groups that will never be jailed."
+          multiple="true"
+          layout="joomla.form.field.list-fancy-select"
+        />
         <!-- checksuperusergroup="1" -->
         <field
           name="mask_usernames"
@@ -46,6 +55,18 @@
           type="storagepath"
           label="Default storage path"
           description="The storage path for the User content. Changing this setting breaks existing URLs!"
+        />
+        <field
+          name="storage_folder"
+          type="text"
+          label="Folder name"
+          description="The folder where user content will be stored. By default, a 'users' folder will be created and used if this option is left blank. Changing this setting breaks existing URLs!"
+        />
+        <field
+          name="storage_name"
+          type="text"
+          label="Display name"
+          description="The display name of the provider."
         />
         <field
           name="thumbs"
