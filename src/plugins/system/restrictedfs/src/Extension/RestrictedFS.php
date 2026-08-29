@@ -155,7 +155,7 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
    */
   public function getDisplayName(): string
   {
-    return 'Restricted FS';
+    return $this->params->get('storage_name', 'Restricted FS');
   }
 
   /**
