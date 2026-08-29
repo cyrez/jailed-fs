@@ -21,44 +21,62 @@ use Joomla\Plugin\Filesystem\Local\Adapter\LocalAdapter;
 class RestrictedFSAdapter extends LocalAdapter
 {
   /**
-   * The file_path of media directory related to site
-   *
-   * @var string
-   *
-   * @since  1.0.0
-   */
+    * The file_path of media directory related to site
+    *
+    * @var string
+    *
+    * @since  1.0.0
+    */
   private $filePath;
-  private $adapterName;
-  private $thumbnails;
 
   /**
-   * The absolute root path in the local file system.
-   *
-   * @param   string  $rootPath  The root path
-   * @param   string  $filePath  The file path of media folder
-   *
-   * @since   1.0.0
-   */
-  public function __construct(string $rootPath, string $filePath, string $adapterName, bool $thumbnails = false)
-  {
-    $this->filePath    = $filePath;
-    $this->adapterName = $adapterName;
-    $this->thumbnails  = $thumbnails;
+    * The storage folder name
+    *
+    * @var string
+    *
+    * @since  1.0.0
+    */
+  private $storageFolder;
 
-    parent::__construct($rootPath, $filePath, $thumbnails, [200, 200]);
+  /**
+    * The adapter name derived from the storage path
+    *
+    * @var string
+    *
+    * @since  1.0.0
+    */
+  private $adapterName;
+
+  /**
+    * The absolute root path in the local file system.
+    *
+    * @param   string  $rootPath  The root path
+    * @param   string  $filePath  The file path of media folder
+    *
+    * @since   1.0.0
+    */
+  public function __construct(string $rootPath, string $filePath, bool $thumbnails = false, array $thumbnailSize = [200, 200])
+  {
+    parent::__construct($rootPath, $filePath, $thumbnails, $thumbnailSize);
+    $this->filePath = $filePath;
+
+    $relativePath = str_replace(JPATH_ROOT . '/', '', $rootPath);
+    $pathParts = explode('/', trim($relativePath, '/'));
+    $this->storageFolder = $pathParts[count($pathParts) - 2] ?? 'users';
+    $this->adapterName = $pathParts[count($pathParts) - 3] ?? 'images';
   }
 
   /**
-   * Returns a url which can be used to display an image from within the "images/users" directory.
-   *
-   * @param   string  $path  Path of the file relative to adapter
-   *
-   * @return  string
-   *
-   * @since   1.0.0
-   */
+    * Returns a url which can be used to display an image from within the storage folder directory.
+    *
+    * @param   string  $path  Path of the file relative to adapter
+    *
+    * @return  string
+    *
+    * @since   1.0.0
+    */
   public function getUrl(string $path): string
   {
-    return Uri::root() . str_replace(" ", "%20", $this->adapterName . '/' . $this->filePath . $path);
+    return Uri::root() . str_replace(" ", "%20", $this->adapterName . '/' . $this->storageFolder . '/' . $this->filePath . $path);
   }
 }

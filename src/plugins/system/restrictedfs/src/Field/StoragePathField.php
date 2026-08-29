@@ -30,7 +30,7 @@ class StoragePathField extends ListField
     {
       $plugin = PluginHelper::getPlugin('filesystem', 'local');
       if ($plugin) {
-        $directories = (new Registry($plugin->params))->get('directories', '[{"directory": "images"}]');
+        $directories = (new Registry($plugin->params))->get('directories', '[{"directory": "images"}, {"directory": "files"}]');
         $options     = [];
 
         // Do a check if default settings are not saved by user, if not initialize them manually

@@ -122,10 +122,11 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
     if (!is_array($options) || count($options) === 0 || !isset($options['default'])) return;
 
     $user = $this->getApplication()->getIdentity();
+    $username = function_exists('transliterator_transliterate') ? transliterator_transliterate('Any-Latin; Latin-ASCII;', $user->username) : $user->username;
     if ($this->masked) {
-      $userName = md5($user->username);
+      $userName = md5($username);
     } else {
-      $userName = urlencode(str_replace(['@', '.', '\\', '/', '*', '?', '<', '>'], ['_', '-', '_', '_', '_', '_', '_', '_'], $user->username));
+      $userName = urlencode(str_replace(['@', '.', '\\', '/', '*', '?', '<', '>'], ['_', '-', '_', '_', '_', '_', '_', '_'], $username));
     }
     $tinyMCE = (object) ['tinyMCE' => ['default' => $options['default']]];
     if (isset($options['default']['comMediaAdapter'])) {
@@ -170,9 +171,10 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
     $user = $app->getIdentity();
     $storagePath   = $this->params->get('storage_path', 'images');
     $storageFolder = $this->params->get('storage_folder', 'users');
+    $username = function_exists('transliterator_transliterate') ? transliterator_transliterate('Any-Latin; Latin-ASCII;', $user->username) : $user->username;
     $userName = $this->masked
-      ? md5($user->username)
-      : urlencode(str_replace(['@', '.', '\\', '/', '*', '?', '<', '>'], ['_', '-', '_', '_', '_', '_', '_', '_'], $user->username));
+      ? md5($username)
+      : urlencode(str_replace(['@', '.', '\\', '/', '*', '?', '<', '>'], ['_', '-', '_', '_', '_', '_', '_', '_'], $username));
 
     $directoryPath = JPATH_ROOT . '/' . $storagePath . '/' . $storageFolder . '/'. $userName;
     if (!is_dir($directoryPath)) mkdir($directoryPath, 0755, true);
@@ -180,8 +182,8 @@ final class RestrictedFS extends CMSPlugin implements ProviderInterface, Subscri
     $adapter = new \Dgrammatiko\Plugin\System\RestrictedFS\Adapter\RestrictedFSAdapter(
       $directoryPath . '/',
       $userName,
-      $storagePath,
-      (bool) $this->params->get('thumbs', false)
+      (bool) $this->params->get('thumbs', false),
+      [200, 200]
     );
 
     return [$adapter->getAdapterName() => $adapter];
