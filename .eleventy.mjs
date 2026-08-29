@@ -94,7 +94,7 @@ export default function (eleventyConfig) {
       data: `_data`,
       input: 'site',
       includes: `_includes`,
-      layouts: `_includes`,
+      layouts: 'site/_includes',
       output: '_site',
     },
   };
