@@ -5,7 +5,7 @@ import eleventyNavigationPlugin from "@11ty/eleventy-navigation";
 import anchor from "markdown-it-anchor";
 // const htmlmin = require("html-minifier");
 // const codepenIt = require("11ty-to-codepen");
-import { Image } from "@11ty/eleventy-img";
+import Image from "@11ty/eleventy-img";
 import { Liquid } from "liquidjs";
 
 async function imageShortcode(src, alt, sizes) {
